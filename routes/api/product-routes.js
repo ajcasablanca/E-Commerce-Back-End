@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
   try {
     // find all products
     const products = await Product.findAll({
-      include: [{ model: Category }, { mdoel: Tag }]
+      include: [{ model: Category }, { model: Tag }]
     });
     // be sure to include its associated Category and Tag data
     res.status(200).json(products);
@@ -82,7 +82,6 @@ router.put('/:id', (req, res) => {
         ProductTag.findAll({
           where: { product_id: req.params.id }
         }).then((productTags) => {
-          // create filtered list of new tag_ids
           const productTagIds = productTags.map(({ tag_id }) => tag_id);
           const newProductTags = req.body.tagIds
             .filter((tag_id) => !productTagIds.includes(tag_id))
@@ -93,7 +92,6 @@ router.put('/:id', (req, res) => {
               };
             });
 
-          // figure out which ones to remove
           const productTagsToRemove = productTags
             .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
             .map(({ id }) => id);
